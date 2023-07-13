@@ -10,6 +10,7 @@ async function run() {
     app.listen(config.port, () => {
       'Server is running on port ' + config.port;
     });
+    
   } catch (err) {
     if (err instanceof Error) {
       console.log(err);
