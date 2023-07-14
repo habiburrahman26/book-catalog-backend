@@ -16,6 +16,21 @@ const registration = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const login = catchAsync(async (req: Request, res: Response) => {
+  const { ...userCredential } = req.body;
+  const result = await AuthService.login(userCredential);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Users login successfully',
+    data: {
+      accessToken: result,
+    },
+  });
+});
+
 export const AuthController = {
   registration,
+  login,
 };
