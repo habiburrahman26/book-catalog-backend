@@ -21,4 +21,6 @@ router.patch(
   BookController.updateBook,
 );
 
+router.delete('/delete-book/:id', authenticate, BookController.deleteBook);
+
 export const BookRouter = router;
