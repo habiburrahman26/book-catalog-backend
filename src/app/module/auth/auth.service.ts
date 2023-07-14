@@ -30,6 +30,7 @@ const login = async (payload: Auth) => {
 
   //check user  exist
   const isUserExist = await AuthModel.findOne({ email });
+  
   if (!isUserExist) {
     throw new ApiError(StatusCodes.CONFLICT, 'User not found');
   }
