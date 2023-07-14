@@ -12,10 +12,17 @@ router.post(
   validationRequest(WishlistValidation.wishlistSchema),
   WishlistController.addToWishList,
 );
+
 router.get(
   '/get-all-wishlist',
   authenticate,
   WishlistController.getAllWishList,
+);
+
+router.delete(
+  '/delete-from-wishlist/:id',
+  authenticate,
+  WishlistController.deleteToWishList,
 );
 
 export const WishlistRouter = router;

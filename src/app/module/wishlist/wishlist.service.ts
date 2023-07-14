@@ -21,7 +21,12 @@ const getAllWishList = async (userId: string): Promise<Wishlist[]> => {
   return wishlist;
 };
 
+const deleteToWishList = async (id: string) => {
+  return await WishlistModal.findByIdAndDelete(id);
+};
+
 export const WishlistService = {
   addToWishList,
   getAllWishList,
+  deleteToWishList,
 };

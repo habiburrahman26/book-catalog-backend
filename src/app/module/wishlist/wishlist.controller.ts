@@ -26,8 +26,20 @@ const getAllWishList = catchAsync(async (req: Request, res: Response) => {
 
   sendResponse(res, {
     success: true,
-    statusCode: StatusCodes.CREATED,
+    statusCode: StatusCodes.OK,
     message: 'Fetch wishlist successfully',
+    data: result,
+  });
+});
+
+const deleteToWishList = catchAsync(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const result = await WishlistService.deleteToWishList(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.OK,
+    message: 'Delete to wishlist successfully',
     data: result,
   });
 });
@@ -35,4 +47,5 @@ const getAllWishList = catchAsync(async (req: Request, res: Response) => {
 export const WishlistController = {
   addToWishList,
   getAllWishList,
+  deleteToWishList,
 };
