@@ -70,10 +70,25 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const addReview = catchAsync(async (req: Request, res: Response) => {
+  const userEmail = (req.user as JwtPayload).email;
+  const { id, ...reviewData } = req.body;
+
+  const result = await BookService.addReview(id, reviewData, userEmail);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: StatusCodes.CREATED,
+    message: 'Review added successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   addBook,
   getBooks,
   getSingleBook,
   updateBook,
   deleteBook,
+  addReview,
 };

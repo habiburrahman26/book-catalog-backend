@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { Book, BookMethods, IBookModel, Review } from './book.type';
+import { JwtPayload } from 'jsonwebtoken';
 
 const reviewSchema = new Schema<Review>({
   rating: {
@@ -65,11 +66,11 @@ const bookSchema = new Schema<Book, IBookModel, BookMethods>(
   },
 );
 
-bookSchema.methods.addReview = function (
+bookSchema.methods.addReview = async function (
   rating: number,
   comment: string,
-  userEmail: string,
-) {
+  userEmail: JwtPayload,
+): Promise<Book> {
   const review = {
     rating,
     comment,
@@ -77,6 +78,8 @@ bookSchema.methods.addReview = function (
   };
 
   this.reviews.push(review);
+  await this.save();
+  return this.toObject();
 };
 
 const BookModal = model<Book, IBookModel>('Book', bookSchema);

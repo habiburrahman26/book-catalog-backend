@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/apiError';
 import BookModal from './book.modal';
-import { Book } from './book.type';
+import { Book, Review } from './book.type';
 import { JwtPayload } from 'jsonwebtoken';
 
 const addBook = async (payload: Book) => {
@@ -64,10 +64,37 @@ const deleteBook = async (
   return await BookModal.findByIdAndDelete(id);
 };
 
+const addReview = async (
+  id: string,
+  payload: Review,
+  userEmail: JwtPayload,
+): Promise<Book> => {
+  const isBookExist = await BookModal.findById(id);
+  if (!isBookExist) {
+    throw new ApiError(StatusCodes.NOT_FOUND, 'Book not found');
+  }
+
+  //check user already added review or not
+  const isReviewExist = isBookExist.reviews.find(
+    review => review.userEmail === String(userEmail),
+  );
+
+  if (isReviewExist) {
+    throw new ApiError(StatusCodes.BAD_REQUEST, 'You already added review');
+  }
+
+  return await isBookExist.addReview(
+    payload.rating,
+    payload.comment,
+    userEmail,
+  );
+};
+
 export const BookService = {
   addBook,
   getBooks,
   getSingleBook,
   updateBook,
   deleteBook,
+  addReview,
 };

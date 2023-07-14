@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { Model, Types } from 'mongoose';
 
 export type Review = {
@@ -21,7 +22,11 @@ export type Book = {
 };
 
 export type BookMethods = {
-  addReview(rating: number, comment: string, userEmail: string): void;
+  addReview(
+    rating: number,
+    comment: string,
+    userEmail: JwtPayload,
+  ): Promise<Book>;
 };
 
 export type IBookModel = Model<Book, object, BookMethods>;
