@@ -1,10 +1,11 @@
 import config from '../../../config';
 import ApiError from '../../../errors/apiError';
+import { JwtHelpers } from '../../../utils/jwtHelpers';
 import AuthModel from './auth.modal';
 import { Auth } from './auth.type';
 import bcrypt from 'bcrypt';
 import { StatusCodes } from 'http-status-codes';
-import jwt, { Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 
 const registration = async (payload: Auth) => {
   // hash password
@@ -39,9 +40,11 @@ const login = async (payload: Auth) => {
     throw new ApiError(StatusCodes.NOT_FOUND, 'Invalid password');
   }
 
-  const token = jwt.sign({ email }, config.jwt_secret as Secret, {
-    expiresIn: config.jwt_expire_in,
-  });
+  const token = JwtHelpers.createToken(
+    { id: isUserExist._id, email },
+    config.jwt_secret as Secret,
+    config.jwt_expire_in as string,
+  );
 
   return token;
 };

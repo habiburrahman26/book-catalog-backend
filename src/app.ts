@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { AuthRouter } from './app/module/auth/auth.route';
 import handleGlobalError from './app/middleware/globalErrorHandler';
+import { BookRouter } from './app/module/book/book.route';
 
 const app: Application = express();
 
@@ -11,10 +12,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.send('hello world');
+  res.send('Server is running');
 });
 
 app.use('/api/v1', AuthRouter);
+app.use('/api/v1', BookRouter);
 
 app.use(handleGlobalError);
 
