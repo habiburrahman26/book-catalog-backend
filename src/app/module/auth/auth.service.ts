@@ -22,7 +22,11 @@ const registration = async (payload: Auth) => {
     password: hashPassword,
   });
 
-  return createUser;
+  // Exclude password from the returned user object
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...userWithoutPassword } = createUser.toObject();
+
+  return userWithoutPassword;
 };
 
 const login = async (payload: Auth) => {
@@ -30,7 +34,7 @@ const login = async (payload: Auth) => {
 
   //check user  exist
   const isUserExist = await AuthModel.findOne({ email });
-  
+
   if (!isUserExist) {
     throw new ApiError(StatusCodes.CONFLICT, 'User not found');
   }

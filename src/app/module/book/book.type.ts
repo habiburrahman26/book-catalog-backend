@@ -1,6 +1,12 @@
 import { JwtPayload } from 'jsonwebtoken';
 import { Model, Types } from 'mongoose';
 
+export type SearchType = {
+  title?: string;
+  author?: string;
+  genre?: string;
+};
+
 export type Review = {
   rating: number;
   comment: string;
