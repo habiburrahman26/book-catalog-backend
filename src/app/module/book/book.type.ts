@@ -7,6 +7,11 @@ export type SearchType = {
   genre?: string;
 };
 
+export type FilterType = {
+  genres?: string;
+  publicationDate?: string;
+};
+
 export type Review = {
   rating: number;
   comment: string;

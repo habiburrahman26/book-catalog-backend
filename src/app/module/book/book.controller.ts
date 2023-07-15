@@ -23,10 +23,7 @@ const getBooks = catchAsync(async (req: Request, res: Response) => {
   const search = pick(req.query, bookSearchFields);
   const filters = pick(req.query, bookFilterFields);
 
-  console.log('search', search);
-  console.log('filters', filters);
-
-  const result = await BookService.getBooks(search);
+  const result = await BookService.getBooks(search, filters);
 
   sendResponse(res, {
     success: true,

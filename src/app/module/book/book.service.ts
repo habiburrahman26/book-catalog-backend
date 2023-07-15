@@ -1,16 +1,18 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/apiError';
 import BookModal from './book.modal';
-import { Book, Review, SearchType } from './book.type';
+import { Book, FilterType, Review, SearchType } from './book.type';
 import { JwtPayload } from 'jsonwebtoken';
-import { bookFilterFields } from './book.constrain';
 
 const addBook = async (payload: Book) => {
   const book = await BookModal.create(payload);
   return book;
 };
 
-const getBooks = async (search: SearchType): Promise<Book[]> => {
+const getBooks = async (
+  search: SearchType,
+  filters: FilterType,
+): Promise<Book[]> => {
   const andConditions = [];
 
   if (search.title) {
@@ -24,6 +26,17 @@ const getBooks = async (search: SearchType): Promise<Book[]> => {
   if (search.genre) {
     andConditions.push({
       genre: { $regex: `^${search.genre}$`, $options: 'i' },
+    });
+  }
+
+  if (filters.genres) {
+    const genres = filters.genres.split(',');
+    andConditions.push({ genre: { $in: genres } });
+  }
+
+  if (filters.publicationDate) {
+    andConditions.push({
+      publicationDate: { $eq: Number(filters.publicationDate) },
     });
   }
 
