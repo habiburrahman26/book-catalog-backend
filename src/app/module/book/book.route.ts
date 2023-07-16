@@ -8,10 +8,12 @@ const router = express.Router();
 
 router.post(
   '/add-book',
+  authenticate,
   validationRequest(BookValidation.bookSchema),
   BookController.addBook,
 );
-router.post('/add-review',authenticate, BookController.addReview);
+
+router.post('/add-review', authenticate, BookController.addReview);
 
 router.get('/get-books', BookController.getBooks);
 router.get('/get-book/:id', BookController.getSingleBook);

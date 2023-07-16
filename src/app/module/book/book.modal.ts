@@ -60,9 +60,6 @@ const bookSchema = new Schema<Book, IBookModel, BookMethods>(
   },
   {
     timestamps: true,
-    toJSON: {
-      virtuals: true,
-    },
   },
 );
 

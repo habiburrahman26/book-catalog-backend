@@ -1,31 +1,36 @@
 import { StatusCodes } from 'http-status-codes';
 import ApiError from '../../../errors/apiError';
 import BookModal from './book.modal';
-import { Book, FilterType, Review, SearchType } from './book.type';
+import { Book, FilterType, Review } from './book.type';
 import { JwtPayload } from 'jsonwebtoken';
 
-const addBook = async (payload: Book) => {
-  const book = await BookModal.create(payload);
+type UserInfo = {
+  id: string;
+  email: string;
+};
+
+const addBook = async (payload: Book, userInfo: UserInfo) => {
+  const book = await BookModal.create({
+    ...payload,
+    user: {
+      id: userInfo.id,
+      email: userInfo.email,
+    },
+  });
   return book;
 };
 
-const getBooks = async (
-  search: SearchType,
-  filters: FilterType,
-): Promise<Book[]> => {
+const getBooks = async (filtersOptions: FilterType): Promise<Book[]> => {
+  const { search, ...filters } = filtersOptions;
   const andConditions = [];
 
-  if (search.title) {
-    andConditions.push({ title: { $regex: search.title, $options: 'i' } });
-  }
-
-  if (search.author) {
-    andConditions.push({ author: { $regex: search.author, $options: 'i' } });
-  }
-
-  if (search.genre) {
+  if (search) {
     andConditions.push({
-      genre: { $regex: `^${search.genre}$`, $options: 'i' },
+      $or: [
+        { title: { $regex: search, $options: 'i' } },
+        { author: { $regex: search, $options: 'i' } },
+        { genre: { $regex: search, $options: 'i' } },
+      ],
     });
   }
 
@@ -43,7 +48,9 @@ const getBooks = async (
   const whereConditions =
     andConditions.length > 0 ? { $and: andConditions } : {};
 
-  const books = await BookModal.find(whereConditions).sort({ createdAt: -1 });
+  const books = await BookModal.find(whereConditions)
+    .sort({ createdAt: -1 })
+    .lean();
   return books;
 };
 

@@ -20,10 +20,6 @@ const bookSchema = z.object({
   publicationDate: z.number({
     required_error: 'Publication date is required',
   }),
-  user: z.object({
-    id: z.string({ required_error: 'User id is required' }),
-    email: z.string({ required_error: 'User email is required' }),
-  }),
 });
 
 const updateBookSchema = z.object({
@@ -32,12 +28,6 @@ const updateBookSchema = z.object({
   image: z.string().url().optional(),
   genre: z.string().optional(),
   publicationDate: z.number().optional(),
-  user: z
-    .object({
-      id: z.string({ required_error: 'User id is required' }),
-      email: z.string({ required_error: 'User email is required' }),
-    })
-    .optional(),
 });
 
 export const BookValidation = {

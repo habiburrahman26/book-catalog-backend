@@ -5,11 +5,14 @@ import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import { JwtPayload } from 'jsonwebtoken';
 import pick from '../../../shared/pick';
-import { bookFilterFields, bookSearchFields } from './book.constrain';
+import { bookFilterFields } from './book.constrain';
 
 const addBook = catchAsync(async (req: Request, res: Response) => {
   const { ...book } = req.body;
-  const result = await BookService.addBook(book);
+  const id = (req.user as JwtPayload).id;
+  const email = (req.user as JwtPayload).email;
+
+  const result = await BookService.addBook(book, { id, email });
 
   sendResponse(res, {
     success: true,
@@ -20,10 +23,9 @@ const addBook = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getBooks = catchAsync(async (req: Request, res: Response) => {
-  const search = pick(req.query, bookSearchFields);
-  const filters = pick(req.query, bookFilterFields);
+  const filterOptions = pick(req.query, bookFilterFields);
 
-  const result = await BookService.getBooks(search, filters);
+  const result = await BookService.getBooks(filterOptions);
 
   sendResponse(res, {
     success: true,
